@@ -5,7 +5,8 @@ const data=await response.json();
 if(!Array.isArray(data.letters)||data.letters.length>10)throw Error('Invalid feed');
 const letters=data.letters.map(l=>{
  if(typeof l.id!=='string'||typeof l.body!=='string'||typeof l.sender!=='string'||Array.from(l.body.replace(/\n/g,'')).length>100||Array.from(l.sender).length>10)throw Error('Invalid letter');
- return {id:l.id,body:l.body,sender:l.sender};
+ if(typeof l.date!=='string'||!/^\d{4}\.\d{2}\.\d{2}$/.test(l.date))throw Error('Invalid submission date');
+ return {id:l.id,body:l.body,sender:l.sender,date:l.date};
 });
 await mkdir('public',{recursive:true});
 await writeFile('public/feed.json',JSON.stringify({version:1,mode:data.mode,cutoff:data.cutoff,letters})+'\n');
