@@ -3,6 +3,17 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      source:
+        description: 'Publication trigger source'
+        required: false
+        default: 'manual'
+        type: string
+      revision:
+        description: 'Requested feed revision'
+        required: false
+        default: '0'
+        type: string
   schedule:
     - cron: '3,8,13,18,23,28,33,38,43,48,53,58 * * * *'
 permissions:
@@ -15,6 +26,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -28,3 +40,5 @@ jobs:
           path: public
       - uses: actions/deploy-pages@v4
         id: deployment
+      - name: Verify public feed
+        run: node sync.mjs --verify
