@@ -1,5 +1,5 @@
 import {mkdir,writeFile} from 'node:fs/promises';
-const response=await fetch('https://marine-date-bottle-mail.pichikyo.chatgpt.site/api/feed',{headers:{Accept:'application/json'},signal:AbortSignal.timeout(30000)});
+const response=await fetch('https://bottlemail.pichikyo.chatgpt.site/api/feed',{headers:{Accept:'application/json'},signal:AbortSignal.timeout(30000)});
 if(!response.ok)throw Error('Feed returned HTTP '+response.status);
 const data=await response.json();
 if(!Array.isArray(data.letters)||data.letters.length>10)throw Error('Invalid feed');
