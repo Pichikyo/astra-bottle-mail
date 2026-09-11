@@ -28,7 +28,10 @@ export async function syncFeed(){
  if(!response)throw lastError;
  const data=normalizeFeed(await response.json());
  await mkdir('public',{recursive:true});
- await writeFile('public/feed.json',JSON.stringify(data)+'\n');
+ const json=JSON.stringify(data)+'\n';
+ await writeFile('public/feed.json',json);
+ await mkdir('public/feeds',{recursive:true});
+ await Promise.all(Array.from({length:16},(_,i)=>writeFile('public/feeds/'+i+'.json',json)));
  console.log('Validated '+data.letters.length+' public letters; revision '+data.source_revision);
 }
 export async function verifyPublished(){
